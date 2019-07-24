@@ -128,7 +128,7 @@ class DocDetailState extends State<DocDetail> {
     @override
     Widget build(BuildContext context) {
       const String cStrDays = "Enter a number of days";
-      
+      TextStyle tStyle
     }
   }
 }
