@@ -28,7 +28,7 @@ class DocDetail extends StatefulWidget {
 
 class DocDetailState extends State<DocDetail> {
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
-  final GlobalKey<ScaffoldState> _scaffoldState = new GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   
   final int daysAhead = 5475; // 15 years in the future
 
@@ -63,6 +63,72 @@ class DocDetailState extends State<DocDetail> {
           expirationCtrl.text = r;
         });
       }, currentTime: initialDate);
+    }
+  }
+
+  void _selectMenu(String value) async {
+    switch(value) {
+      case menuDelete:
+        if(widget.doc.id == -1) {
+          return;
+        }
+        await _deleteDoc(widget.doc.id);
+    }
+  }
+  void _deleteDoc(int id) async {
+      int r = await widget.dbh.deleteDoc(widget.doc.id);
+      Navigator.pop(context, true);
+  }
+
+  void _saveDoc() {
+    widget.doc.title = titleCtrl.text;
+    widget.doc.expiration = expirationCtrl.text;
+
+    widget.doc.fqYear = Val.BoolToInt(fqYearCtrl);
+    widget.doc.fqHalfYear = Val.BoolToInt(fqHalfYearCtrl);
+    widget.doc.fqQuarter = Val.BoolToInt(fqQuarterCtrl);
+    widget.doc.fqMonth = Val.BoolToInt(fqMonthCtrl);
+
+    if(widget.doc.id > -1) {
+      debugPrint("_update->Doc Id: " + widget.doc.id.toString());
+      widget.dbh.updateDoc(widget.doc);
+      Navigator.pop(context);
+    }
+    else {
+      Future<int> idd = widget.dbh.getMaxId();
+      idd.then((result) {
+        debugPrint("_insertDoc->Doc Id: " + widget.doc.id.toString());
+        widget.doc.id = (result != null) ? result +1 : 1;
+        widget.dbh.insertDoc(widget.doc);
+        Navigator.pop(context);
+      });
+    }
+  }
+  void _submitForm() {
+    final FormState form = _formKey.currentState;
+
+    if(!form.validate()) {
+      showMessage("Some data is invalid. Please correct.");
+    }
+    else {
+      _saveDoc();
+    }
+  }
+
+  void showMessage(String message, [MaterialColor color = Colors.red]) {
+    _scaffoldKey.currentState.showSnackBar(new SnackBar(backgroundColor: color,
+        content: new Text(message)));
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _initCtrls();
+
+    @override
+    Widget build(BuildContext context) {
+      const String cStrDays = "Enter a number of days";
+      
     }
   }
 }
