@@ -139,7 +139,14 @@ class DocDetailState extends State<DocDetail> {
           actions: (ttl == "") ? <Widget>[]: <Widget>[
             PopupMenuButton(
               onSelected: _selectMenu,
-              
+              itemBuilder: (BuildContext context) {
+                return menuOptions.map((String choice) {
+                  return PopupMenuItem <String>(
+                    value: choice,
+                    child: Text(choice),
+                  );
+                });
+              },
             )
           ]
         ),
