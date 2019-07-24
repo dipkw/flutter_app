@@ -128,7 +128,22 @@ class DocDetailState extends State<DocDetail> {
     @override
     Widget build(BuildContext context) {
       const String cStrDays = "Enter a number of days";
-      TextStyle tStyle
+      TextStyle tStyle = Theme.of(context).textTheme.title;
+      String ttl = widget.doc.title;
+
+      return Scaffold(
+        key: _scaffoldKey,
+        resizeToAvoidBottomPadding: false,
+        appBar: AppBar(
+          title: Text(ttl != "" ? widget.doc.title : "New Document"),
+          actions: (ttl == "") ? <Widget>[]: <Widget>[
+            PopupMenuButton(
+              onSelected: _selectMenu,
+              
+            )
+          ]
+        ),
+      );
     }
   }
 }
