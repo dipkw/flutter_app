@@ -145,11 +145,39 @@ class DocDetailState extends State<DocDetail> {
                     value: choice,
                     child: Text(choice),
                   );
-                });
+                }).toList();
               },
             )
           ]
         ),
+        body: Form(
+            key: _formKey,
+            autovalidate: true,
+            child: SafeArea(
+              top: false,
+              bottom: false,
+              child: ListView(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                children: <Widget>[
+                  TextFormField (
+                    inputFormatters: [
+                      WhitelistingTextInputFormatter(
+                        RegExp("[a-zA-Z0-9 ]")
+                      )
+                    ],
+                    controller: titleCtrl,
+                    style: tStyle,
+                    validator: (val) => Val.ValidateTitle(val),
+                    decoration: InputDecoration(
+                      icon: const Icon(Icons.title),
+                      hintText: 'Enter the document name',
+                      labelText: 'Document Name',
+                    ),
+                  )
+                ],
+              ),
+            ),
+        )
       );
     }
   }
